@@ -16,6 +16,7 @@ import GradientDivider from "../components/GradientDivider";
 import FloatingLabelInput from "../components/common/FloatingLableInput.jsx";
 import TrendingSlider from "../components/common/TrendingSlider";
 import ReasonsSection from "../components/ReasonsSection";
+import FaqSection from "../components/FaqSection";
 import BottomCtaSection from "../components/BottomCtaSection";
 import FooterSection from "../components/FooterSection";
 
@@ -50,7 +51,7 @@ const LandingPage = () => {
 
                 <div
                     className="absolute inset-0"
-                    style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%)" }}
+                    style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.8) 100%)" }}
                 />
 
                 <div className="absolute inset-0 z-10 flex flex-col">
@@ -119,6 +120,7 @@ const LandingPage = () => {
             </section>
 
             <ReasonsSection />
+            <FaqSection />
             <BottomCtaSection />
             <FooterSection />
         </div>

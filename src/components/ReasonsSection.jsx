@@ -31,14 +31,14 @@ const ReasonsSection = () => {
           More reasons to choose Redfinix
         </h2>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
+        <div className="grid gap-4 lg:grid-cols-2 lg:gap-5 xl:grid-cols-4">
           {reasons.map(({ title, description, icon: Icon }) => (
             <article
               key={title}
-              className="relative mx-auto w-full max-w-[22.5rem] overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-[#1a2260] via-[#251b38] to-[#2b1522] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] min-h-[14.25rem] sm:max-w-none sm:min-h-[14rem] sm:p-6"
+              className="relative mx-auto w-full max-w-[22.5rem] overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-[#1a2260] via-[#251b38] to-[#2b1522] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] min-h-[14.25rem] sm:max-w-none sm:min-h-[14rem] sm:p-6 lg:min-h-[15rem] xl:min-h-[17.5rem] xl:mx-0"
             >
               <div className="max-w-[32rem]">
-                <h3 className="text-[1.35rem] font-bold leading-tight text-white sm:text-[1.65rem]">{title}</h3>
+                <h3 className="text-[1.35rem] font-semibold leading-tight text-white sm:text-[1.65rem]">{title}</h3>
                 <p className="mt-3 max-w-[32rem] text-[0.98rem] leading-7 text-white/70 sm:text-[0.98rem] sm:leading-7">
                   {description}
                 </p>
@@ -56,6 +56,14 @@ const ReasonsSection = () => {
 };
 
 export default ReasonsSection;
+
+
+
+
+
+
+
+
 
 
 
