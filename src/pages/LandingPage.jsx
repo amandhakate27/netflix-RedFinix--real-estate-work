@@ -1,4 +1,4 @@
-import { useRef } from "react";
+﻿import { useRef } from "react";
 import { ChevronRight } from "lucide-react";
 import landingPageImage from "../assets/images/landingPage.png";
 import redFinixLogo from "../assets/images/redFinixLogo.png";
@@ -56,10 +56,7 @@ const LandingPage = () => {
 
                 <div className="absolute inset-0 z-10 flex flex-col">
                     <div className="flex items-center justify-between px-4 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 lg:px-16 lg:py-6">
-                        <img src={redFinixLogo} alt="redfinix-logo" className="w-28 sm:w-28 md:w-36 lg:w-44" />
-                        <button className="rounded bg-[#E50914] px-4 py-1.5 text-sm font-medium text-white sm:px-4 sm:py-1.5 sm:text-sm md:px-5 md:py-2">
-                            Sign In
-                        </button>
+                        <img src={redFinixLogo} alt="redfinix-logo" className="w-28 sm:w-28 md:w-36 lg:w-44" /><button className="rounded bg-[#E50914] px-4 py-1.5 text-sm font-medium text-white sm:px-4 sm:py-1.5 sm:text-sm md:px-5 md:py-2">                            Sign In                        </button>
                     </div>
 
                     <div className="flex flex-1 flex-col items-center justify-center px-4 text-center sm:justify-center sm:px-8 sm:pt-0 md:px-10">
@@ -128,3 +125,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+

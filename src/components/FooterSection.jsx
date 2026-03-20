@@ -1,5 +1,8 @@
+import { Link } from "react-router-dom";
+
 const footerColumns = [
     [
+        { label: "Home", to: "/home" },
         { label: "Browse Properties", href: "#" },
         { label: "Featured Listings", href: "#" },
         { label: "Luxury Estates", href: "#" },
@@ -39,11 +42,17 @@ const FooterSection = () => {
                 <div className="mt-8 grid grid-cols-1 gap-y-3 sm:grid-cols-2 sm:gap-x-10 md:mt-9 md:grid-cols-3 lg:grid-cols-4">
                     {footerColumns.map((column, index) => (
                         <div key={index} className="flex flex-col gap-3 text-[0.98rem] leading-7 sm:text-[1rem]">
-                            {column.map(({ label, href }) => (
-                                <a key={label} href={href} className="underline transition hover:text-white">
-                                    {label}
-                                </a>
-                            ))}
+                            {column.map(({ label, href, to }) =>
+                                to ? (
+                                    <Link key={label} to={to} className="underline transition hover:text-white">
+                                        {label}
+                                    </Link>
+                                ) : (
+                                    <a key={label} href={href} className="underline transition hover:text-white">
+                                        {label}
+                                    </a>
+                                )
+                            )}
                         </div>
                     ))}
                 </div>
