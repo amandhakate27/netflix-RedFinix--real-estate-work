@@ -3,12 +3,13 @@ import { ChevronRight } from "lucide-react";
 import FloatingLabelInput from "./common/FloatingLableInput.jsx";
 
 const BottomCtaSection = () => {
-    const emailRef = useRef(null);
+    const desktopEmailRef = useRef(null);
+    const mobileEmailRef = useRef(null);
 
-    const focusIfEmpty = () => {
-        if (!emailRef.current) return;
-        if (!emailRef.current.value.trim()) {
-            emailRef.current.focus();
+    const focusIfEmpty = (inputRef) => {
+        if (!inputRef.current) return;
+        if (!inputRef.current.value.trim()) {
+            inputRef.current.focus();
         }
     };
 
@@ -22,11 +23,11 @@ const BottomCtaSection = () => {
                 <div className="mt-5 w-full max-w-xs sm:mx-auto sm:mt-5 sm:max-w-xl md:max-w-2xl">
                     <div className="hidden sm:flex sm:flex-row sm:items-stretch sm:gap-3">
                         <div className="flex-1">
-                            <FloatingLabelInput ref={emailRef} placeholder="Email address" type="email" />
+                            <FloatingLabelInput ref={desktopEmailRef} placeholder="Email address" type="email" />
                         </div>
                         <button
                             type="button"
-                            onClick={focusIfEmpty}
+                            onClick={() => focusIfEmpty(desktopEmailRef)}
                             className="flex items-center justify-center gap-2 rounded bg-[#E50914] px-7 text-lg font-semibold text-white transition hover:bg-[#c11119] md:px-8 md:text-xl"
                         >
                             Get Started
@@ -36,11 +37,11 @@ const BottomCtaSection = () => {
 
                     <div className="flex flex-col items-start gap-4 sm:hidden">
                         <div className="w-full">
-                            <FloatingLabelInput ref={emailRef} placeholder="Email address" type="email" />
+                            <FloatingLabelInput ref={mobileEmailRef} placeholder="Email address" type="email" />
                         </div>
                         <button
                             type="button"
-                            onClick={focusIfEmpty}
+                            onClick={() => focusIfEmpty(mobileEmailRef)}
                             className="flex items-center justify-center gap-2 rounded bg-[#E50914] px-5 py-3 text-[1.05rem] font-semibold text-white transition hover:bg-[#c11119]"
                         >
                             Get Started
