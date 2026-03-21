@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronLeft, ChevronRight, Info, Menu, Search, X } from "lucide-react";
+import HoverPropertyCard from "../components/common/HoverPropertyCard";
+import PreviewSliderRow from "../components/common/PreviewSliderRow";
+import Top10SliderRow from "../components/common/Top10SliderRow";
+import Footer from "../components/common/Footer";
 import redFinixLogo from "../assets/images/redFinixLogo.png";
 import profilePhotoRed from "../assets/images/profilePhotoRed.jpg";
 import heroSlide1 from "../assets/images/HeroSlide1.png";
@@ -16,6 +20,17 @@ import apartment2Slide1 from "../assets/images/apartment2Slide1.png";
 import apartment3Slide1 from "../assets/images/apartment3Slide1.png";
 import apartment4Slide1 from "../assets/images/apartment4Slide1.png";
 import townhouse1Slide1 from "../assets/images/townhouse1Slide1.png";
+
+import luxuryEstate1 from "../assets/images/luxuryEstate1.png";
+import luxuryEstate2 from "../assets/images/luxuryEstate2.png";
+import luxuryEstate3 from "../assets/images/luxuryEstate3.png";
+import luxuryEstate4 from "../assets/images/luxuryEstate4.png";
+import luxuryEstate5 from "../assets/images/luxuryEstate5.png";
+import luxuryEstate6 from "../assets/images/luxuryEstate6.png";
+import luxuryEstate7 from "../assets/images/luxuryEstate7.png";
+import luxuryEstate8 from "../assets/images/luxuryEstate8.png";
+import luxuryEstate9 from "../assets/images/luxuryEstate9.png";
+import luxuryEstate10 from "../assets/images/luxuryEstate10.png";
 import townhouse2Slide1 from "../assets/images/townhouse2Slide1.png";
 import townhouse3Slide1 from "../assets/images/townhouse3Slide1.png";
 import townhouse4Slide1 from "../assets/images/townhouse4Slide1.png";
@@ -133,17 +148,125 @@ const contentBaseClass =
     "transform-gpu transition-all duration-1000 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]";
 const navBaseClass = "text-sm transition-colors duration-200 hover:text-[#b3b3b3]";
 
+const top10Images = [
+    luxuryEstate1, luxuryEstate2, luxuryEstate3, luxuryEstate4, luxuryEstate5,
+    luxuryEstate6, luxuryEstate7, luxuryEstate8, luxuryEstate9, luxuryEstate10
+];
+
+const getTop10Slides = () => {
+    return top10Images.map((img, i) => ({
+        image: img,
+        title: `India's Finest 00${i + 1}`,
+        description: `This highly sought-after estate ranks #${i + 1} in India today. Experience unmatched luxury and global standards in real estate.`,
+        location: ["Mumbai", "Delhi", "Bengaluru", "Pune", "Goa", "Chennai", "Kolkata"][i % 7] + ", India",
+        beds: (i % 3) + 3,
+        baths: (i % 2) + 3,
+        area: `${2500 + i * 500} sq.ft`,
+        price: `₹${(i * 3 + 10).toFixed(1)} Cr`,
+        status: "High Demand",
+        badge: `Top ${i + 1}`,
+        type: i % 3 === 0 ? "Penthouse" : "Mansion",
+        overview: `A masterpiece of architecture currently trending across the nation. Secure your private viewing ASAP.`,
+        highlights: "Helipad, Infinity Pool, Smart Automation"
+    }));
+};
+
+const getShuffledSlides = () => {
+    const generateMockData = (img, i) => ({
+        image: img,
+        title: `Signature Estate 00${i + 1}`,
+        description: `A stunning property featuring premium amenities, modern decor, and a prime location. Perfect for elevated living and entertaining. Property Ref: #RFX-${i * 102 + 50}.`,
+        location: ["Mumbai", "Pune", "Goa", "Alibaug", "Lonavala", "Delhi", "Bengaluru"][i % 7] + ", India",
+        beds: (i % 4) + 2,
+        baths: (i % 3) + 2,
+        area: `${1500 + i * 250} sq.ft`,
+        price: `₹${(i * 1.5 + 2).toFixed(1)} Cr`,
+        status: i % 2 === 0 ? "Ready to Move" : "Just Listed",
+        badge: i % 3 === 0 ? "Featured" : "Verified",
+        type: i % 4 === 0 ? "Villa" : "Apartment",
+        overview: `Experience the best of luxury living in this carefully crafted home designed for comfort and style.`,
+        highlights: ["Pool access, gym", "Rooftop terrace, smart home", "Private garden, security", "Sky lounge, concierge"][i % 4]
+    });
+
+    const shuffled = Array.from(new Set(previewSlides));
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.map(generateMockData);
+};
+
 const Home = () => {
     const location = useLocation();
     const [activeIndex, setActiveIndex] = useState(1);
     const [contentVisible, setContentVisible] = useState(true);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedSlide, setSelectedSlide] = useState(null);
+
+    const [randomizedSlides] = useState(getShuffledSlides);
+    const [trendingSlides] = useState(getShuffledSlides);
+    const [slider3Slides] = useState(getShuffledSlides);
+    const [slider4Slides] = useState(getShuffledSlides);
+    const [slider5Slides] = useState(getShuffledSlides);
+    const [slider6Slides] = useState(getShuffledSlides);
+    const [slider7Slides] = useState(getShuffledSlides);
+    const [slider8Slides] = useState(getShuffledSlides);
+    const [top10Slides] = useState(getTop10Slides);
+    const [top10Slides2] = useState(getTop10Slides);
+
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const searchRefDesktop = useRef(null);
+    const searchRefMobile = useRef(null);
     const timeoutRef = useRef(null);
     const intervalRef = useRef(null);
-    const previewRowRef = useRef(null);
+    const [hoveredCard, setHoveredCard] = useState(null);
+    const hoverTimerRef = useRef(null);
+
+    useEffect(() => {
+        const handleWindowScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+        // Initial checks
+        handleWindowScroll();
+
+        window.addEventListener("scroll", handleWindowScroll);
+        return () => window.removeEventListener("scroll", handleWindowScroll);
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            const deskNode = searchRefDesktop.current;
+            const mobNode = searchRefMobile.current;
+            if (
+                (!deskNode || !deskNode.contains(event.target)) &&
+                (!mobNode || !mobNode.contains(event.target))
+            ) {
+                setIsSearchOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const currentSlide = useMemo(() => heroSlides[activeIndex], [activeIndex]);
+
+    const handleCardMouseEnter = (slideObj, event) => {
+        const target = event.currentTarget;
+        if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+
+        hoverTimerRef.current = setTimeout(() => {
+            const rect = target.getBoundingClientRect();
+            setHoveredCard({ slide: slideObj, rect });
+        }, 750);
+    };
+
+    const handleCardMouseLeave = () => {
+        if (hoverTimerRef.current) {
+            clearTimeout(hoverTimerRef.current);
+            hoverTimerRef.current = null;
+        }
+    };
 
     const clearTimers = () => {
         if (timeoutRef.current) {
@@ -198,14 +321,7 @@ const Home = () => {
         };
     }, [selectedSlide]);
 
-    const scrollPreviewRow = (direction) => {
-        if (!previewRowRef.current) return;
-        const scrollAmount = (PREVIEW_CARD_WIDTH * 4) + (PREVIEW_CARD_GAP * 4);
-        previewRowRef.current.scrollBy({
-            left: direction === "next" ? scrollAmount : -scrollAmount,
-            behavior: "smooth",
-        });
-    };
+
 
     const renderNavItem = (link) => {
         if (link.to) {
@@ -241,6 +357,8 @@ const Home = () => {
                     .home-preview-scroll {
                         scrollbar-width: none;
                         -ms-overflow-style: none;
+                        scroll-behavior: smooth;
+                        -webkit-overflow-scrolling: touch;
                     }
 
                     .home-preview-scroll::-webkit-scrollbar {
@@ -249,7 +367,7 @@ const Home = () => {
                 `}
             </style>
 
-            <section className="relative h-screen overflow-hidden bg-black text-white">
+            <section className="relative h-screen overflow-x-clip bg-black text-white">
                 <div className="absolute inset-0 overflow-hidden">
                     {heroSlides.map((slide, index) => (
                         <img
@@ -262,10 +380,12 @@ const Home = () => {
                         />
                     ))}
                     <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(0,0,0,0.6)_15%,rgba(0,0,0,0.36)_40%,rgba(0,0,0,0.14)_66%)]" />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.14)_0%,rgba(0,0,0,0.08)_55%,rgba(0,0,0,0.62)_100%)]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.14)_0%,rgba(0,0,0,0.4)_55%,rgba(20,20,20,1)_100%)]" />
                 </div>
 
-                <header className="relative z-20 px-4 pt-2 sm:px-8 sm:pt-3 lg:px-16 lg:pt-4">
+                <header
+                    className={`fixed left-0 right-0 top-0 z-50 w-full transition-all duration-300 sm:px-8 lg:px-16 ${isScrolled ? "bg-[#141414] px-4 py-3 shadow-md" : "bg-transparent px-4 pt-4 sm:pt-5 lg:pt-6"}`}
+                >
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex min-w-0 items-center gap-2 lg:gap-8">
                             <img src={redFinixLogo} alt="Redfinix" className="w-28 sm:w-32 lg:w-36" />
@@ -284,9 +404,27 @@ const Home = () => {
                         </div>
 
                         <div className="hidden lg:flex lg:items-center lg:gap-5">
-                            <button type="button" className="text-white transition hover:text-[#b3b3b3]" aria-label="Search">
-                                <Search className="h-5 w-5" strokeWidth={2.2} />
-                            </button>
+                            <div
+                                ref={searchRefDesktop}
+                                className={`flex items-center transition-all duration-300 ease-[ease] ${isSearchOpen ? "w-[260px] border border-white bg-black/80 px-2 py-1.5" : "w-[26px] border border-transparent bg-transparent"
+                                    }`}
+                                style={{ overflow: "hidden" }}
+                            >
+                                <button
+                                    type="button"
+                                    className="shrink-0 text-white transition hover:text-[#b3b3b3]"
+                                    aria-label="Search"
+                                    onClick={() => setIsSearchOpen(true)}
+                                >
+                                    <Search className="h-5 w-5" strokeWidth={2.2} />
+                                </button>
+                                <input
+                                    type="text"
+                                    placeholder="Properties, locations, builders"
+                                    className={`bg-transparent pb-0 pl-2.5 pt-0.5 text-[0.85rem] text-white placeholder:text-white/60 focus:outline-none transition-opacity duration-300 ${isSearchOpen ? "opacity-100 w-full" : "opacity-0 w-0"
+                                        }`}
+                                />
+                            </div>
                             <div className="flex items-center gap-2">
                                 <img src={profilePhotoRed} alt="Profile" className="h-8 w-8 rounded object-cover" />
                                 <ChevronDown className="h-4 w-4 text-white" strokeWidth={2.2} />
@@ -294,9 +432,27 @@ const Home = () => {
                         </div>
 
                         <div className="flex items-center gap-3 lg:hidden">
-                            <button type="button" className="text-white transition hover:text-[#b3b3b3]" aria-label="Search">
-                                <Search className="h-5 w-5" strokeWidth={2.2} />
-                            </button>
+                            <div
+                                ref={searchRefMobile}
+                                className={`hidden sm:flex items-center transition-all duration-300 ease-[ease] ${isSearchOpen ? "w-[220px] border border-white bg-black/80 px-2 py-1.5" : "w-[26px] border border-transparent bg-transparent"
+                                    }`}
+                                style={{ overflow: "hidden" }}
+                            >
+                                <button
+                                    type="button"
+                                    className="shrink-0 text-white transition hover:text-[#b3b3b3]"
+                                    aria-label="Search"
+                                    onClick={() => setIsSearchOpen(true)}
+                                >
+                                    <Search className="h-5 w-5" strokeWidth={2.2} />
+                                </button>
+                                <input
+                                    type="text"
+                                    placeholder="Properties, locations, builders"
+                                    className={`bg-transparent pb-0 pl-2 pt-0.5 text-[0.85rem] text-white placeholder:text-white/60 focus:outline-none transition-opacity duration-300 ${isSearchOpen ? "opacity-100 w-full" : "opacity-0 w-0"
+                                        }`}
+                                />
+                            </div>
                             <img src={profilePhotoRed} alt="Profile" className="h-8 w-8 rounded object-cover" />
                         </div>
                     </div>
@@ -310,7 +466,7 @@ const Home = () => {
                     )}
                 </header>
 
-                <div className="relative z-10 flex h-full items-center px-4 pb-20 pt-8 sm:px-8 sm:pb-24 sm:pt-12 lg:px-16 lg:pb-28 lg:pt-16">
+                <div className="relative z-10 flex h-full items-center px-4 pb-20 pt-16 sm:px-8 sm:pb-24 sm:pt-20 lg:px-16 lg:pb-28 lg:pt-24">
                     <div className="max-w-xl lg:max-w-2xl">
                         <div className="mt-4 flex w-full flex-row flex-wrap items-end gap-2">
                             <h1
@@ -359,50 +515,82 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
+
+                <div className="absolute bottom-0 left-0 right-0 z-30 w-full translate-y-1/4">
+                    <PreviewSliderRow
+                        title="Gems for You"
+                        slides={randomizedSlides}
+                        onSlideClick={setSelectedSlide}
+                        onSlideHover={handleCardMouseEnter}
+                        onSlideLeave={handleCardMouseLeave}
+                    />
+                </div>
             </section>
 
-            <section className="relative bg-[#141414] px-0 pb-10 pt-10 text-white sm:pt-12 lg:pt-14">
-                <div className="px-4 sm:px-8 lg:px-16">
-                    <h2 className="mb-3 text-2xl font-bold text-white sm:text-[2rem]">Gems for You</h2>
-                </div>
-
-                <div className="relative">
-                    <button
-                        type="button"
-                        onClick={() => scrollPreviewRow("prev")}
-                        className="absolute left-0 top-1/2 z-20 flex h-[122.71px] w-14 -translate-y-1/2 items-center justify-center bg-black/35 text-white transition hover:bg-black/55"
-                        aria-label="Previous previews"
-                    >
-                        <ChevronLeft className="h-10 w-10" strokeWidth={1.8} />
-                    </button>
-
-                    <div
-                        ref={previewRowRef}
-                        className="home-preview-scroll overflow-x-auto overflow-y-hidden px-0"
-                    >
-                        <div className="flex min-w-max gap-[6px] px-0">
-                            {previewSlides.map((image, index) => (
-                                <button
-                                    key={`${image}-${index}`}
-                                    type="button"
-                                    className="shrink-0 overflow-hidden rounded-sm transition-transform duration-300"
-                                    style={{ width: `${PREVIEW_CARD_WIDTH}px`, height: `${PREVIEW_CARD_HEIGHT}px` }}
-                                >
-                                    <img src={image} alt={`Property preview ${index + 1}`} className="h-full w-full object-cover" />
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        onClick={() => scrollPreviewRow("next")}
-                        className="absolute right-0 top-1/2 z-20 flex h-[122.71px] w-14 -translate-y-1/2 items-center justify-center bg-black/35 text-white transition hover:bg-black/55"
-                        aria-label="Next previews"
-                    >
-                        <ChevronRight className="h-10 w-10" strokeWidth={1.8} />
-                    </button>
-                </div>
+            <section className="relative bg-[#141414] px-0 pb-10 pt-16 text-white sm:pt-20 lg:pt-28 space-y-10 sm:space-y-16">
+                <PreviewSliderRow
+                    title="Trending Searches"
+                    slides={trendingSlides}
+                    onSlideClick={setSelectedSlide}
+                    onSlideHover={handleCardMouseEnter}
+                    onSlideLeave={handleCardMouseLeave}
+                />
+                <Top10SliderRow
+                    title="Top Trending Properties"
+                    slides={top10Slides}
+                    onSlideClick={setSelectedSlide}
+                    onSlideHover={handleCardMouseEnter}
+                    onSlideLeave={handleCardMouseLeave}
+                />
+                <PreviewSliderRow
+                    title="New Arrivals"
+                    slides={slider3Slides}
+                    onSlideClick={setSelectedSlide}
+                    onSlideHover={handleCardMouseEnter}
+                    onSlideLeave={handleCardMouseLeave}
+                />
+                <Top10SliderRow
+                    title="Top Trending Luxury Homes"
+                    slides={top10Slides2}
+                    onSlideClick={setSelectedSlide}
+                    onSlideHover={handleCardMouseEnter}
+                    onSlideLeave={handleCardMouseLeave}
+                />
+                <PreviewSliderRow
+                    title="Because You Viewed Luxury Homes"
+                    slides={slider4Slides}
+                    onSlideClick={setSelectedSlide}
+                    onSlideHover={handleCardMouseEnter}
+                    onSlideLeave={handleCardMouseLeave}
+                />
+                <PreviewSliderRow
+                    title="Editor's Picks"
+                    slides={slider5Slides}
+                    onSlideClick={setSelectedSlide}
+                    onSlideHover={handleCardMouseEnter}
+                    onSlideLeave={handleCardMouseLeave}
+                />
+                <PreviewSliderRow
+                    title="Premium Villas"
+                    slides={slider6Slides}
+                    onSlideClick={setSelectedSlide}
+                    onSlideHover={handleCardMouseEnter}
+                    onSlideLeave={handleCardMouseLeave}
+                />
+                <PreviewSliderRow
+                    title="Waterfront Properties"
+                    slides={slider7Slides}
+                    onSlideClick={setSelectedSlide}
+                    onSlideHover={handleCardMouseEnter}
+                    onSlideLeave={handleCardMouseLeave}
+                />
+                <PreviewSliderRow
+                    title="High ROI Investments"
+                    slides={slider8Slides}
+                    onSlideClick={setSelectedSlide}
+                    onSlideHover={handleCardMouseEnter}
+                    onSlideLeave={handleCardMouseLeave}
+                />
             </section>
 
             {selectedSlide && (
@@ -460,8 +648,23 @@ const Home = () => {
                     </div>
                 </div>
             )}
+
+            {hoveredCard && (
+                <HoverPropertyCard
+                    slide={hoveredCard.slide}
+                    rect={hoveredCard.rect}
+                    onClose={() => setHoveredCard(null)}
+                    onClick={(slide) => {
+                        setHoveredCard(null);
+                        setSelectedSlide(slide);
+                    }}
+                />
+            )}
+            <Footer />
         </>
     );
 };
 
 export default Home;
+
+
