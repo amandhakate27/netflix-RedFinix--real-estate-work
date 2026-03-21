@@ -31,11 +31,10 @@ const heroSlides = [
         beds: "5 Beds",
         baths: "4 Baths",
         area: "6,200 sq.ft",
-        price: "? 14.5 Cr",
+        price: "?14.5 Cr",
         overview:
             "A private luxury villa with open glass interiors, resort-style outdoor spaces, and a layout designed for elegant family living.",
         highlights: "Infinity pool, skyline terrace, designer kitchen",
-        idealFor: "Luxury buyers, private hosting, family estate living",
     },
     {
         image: heroSlide2,
@@ -49,11 +48,10 @@ const heroSlides = [
         beds: "4 Beds",
         baths: "4 Baths",
         area: "4,800 sq.ft",
-        price: "? 9.8 Cr",
+        price: "?9.8 Cr",
         overview:
             "A panoramic penthouse residence with double-height living, premium finishes, and a rooftop-ready entertaining experience.",
         highlights: "Private deck, skyline views, bespoke finishes",
-        idealFor: "City executives, luxury buyers, premium investors",
     },
     {
         image: heroSlide3,
@@ -67,11 +65,10 @@ const heroSlides = [
         beds: "6 Beds",
         baths: "5 Baths",
         area: "8,100 sq.ft",
-        price: "? 18.2 Cr",
+        price: "?18.2 Cr",
         overview:
             "A coastal estate built for light, privacy, and relaxed premium living with generous entertaining zones throughout.",
         highlights: "Sea-facing lawn, spa suite, sunset deck",
-        idealFor: "Holiday home buyers, retreat seekers, premium hosting",
     },
     {
         image: heroSlide4,
@@ -85,11 +82,10 @@ const heroSlides = [
         beds: "5 Beds",
         baths: "5 Baths",
         area: "7,300 sq.ft",
-        price: "? 12.9 Cr",
+        price: "?12.9 Cr",
         overview:
             "A serene manor residence surrounded by landscaped greens, crafted for calm luxury, family comfort, and refined entertaining.",
         highlights: "Garden court, lounge pavilion, formal dining wing",
-        idealFor: "Second-home buyers, family estates, nature-led living",
     },
 ];
 
@@ -102,7 +98,7 @@ const Home = () => {
     const [activeIndex, setActiveIndex] = useState(1);
     const [contentVisible, setContentVisible] = useState(true);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedSlide, setSelectedSlide] = useState(null);
     const timeoutRef = useRef(null);
     const intervalRef = useRef(null);
 
@@ -136,22 +132,6 @@ const Home = () => {
         }, SLIDE_DURATION);
     };
 
-    const changeSlide = (nextIndex) => {
-        if (nextIndex === activeIndex) return;
-        setContentVisible(false);
-        if (timeoutRef.current) {
-            window.clearTimeout(timeoutRef.current);
-        }
-        timeoutRef.current = window.setTimeout(() => {
-            setActiveIndex(nextIndex);
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    setContentVisible(true);
-                });
-            });
-        }, CONTENT_FADE_DELAY);
-    };
-
     useEffect(() => {
         if (intervalRef.current) {
             window.clearInterval(intervalRef.current);
@@ -171,11 +151,11 @@ const Home = () => {
     }, []);
 
     useEffect(() => {
-        document.body.style.overflow = isModalOpen ? "hidden" : "";
+        document.body.style.overflow = selectedSlide ? "hidden" : "";
         return () => {
             document.body.style.overflow = "";
         };
-    }, [isModalOpen]);
+    }, [selectedSlide]);
 
     const renderNavItem = (link) => {
         if (link.to) {
@@ -217,9 +197,8 @@ const Home = () => {
                             key={slide.title}
                             src={slide.image}
                             alt={slide.title}
-                            className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-[1500ms] [transition-timing-function:cubic-bezier(0.4,0,0.2,1)] ${
-                                index === activeIndex ? "opacity-[0.92]" : "opacity-0"
-                            }`}
+                            className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-[1500ms] [transition-timing-function:cubic-bezier(0.4,0,0.2,1)] ${index === activeIndex ? "opacity-[0.92]" : "opacity-0"
+                                }`}
                             style={{ animation: index === activeIndex ? `heroZoom ${SLIDE_DURATION}ms ease-out forwards` : "none" }}
                         />
                     ))}
@@ -227,10 +206,20 @@ const Home = () => {
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.14)_0%,rgba(0,0,0,0.08)_55%,rgba(0,0,0,0.62)_100%)]" />
                 </div>
 
-                <header className="relative z-20 px-4 pt-4 sm:px-8 sm:pt-5 lg:px-16 lg:pt-6">
+                <header className="relative z-20 px-4 pt-2 sm:px-8 sm:pt-3 lg:px-16 lg:pt-4">
                     <div className="flex items-center justify-between gap-4">
-                        <div className="flex min-w-0 items-center gap-5 lg:gap-8">
+                        <div className="flex min-w-0 items-center gap-2 lg:gap-8">
                             <img src={redFinixLogo} alt="Redfinix" className="w-28 sm:w-32 lg:w-36" />
+                            {/* Browse button for mobile/tablet, right after logo, less gap */}
+                            <button
+                                type="button"
+                                onClick={() => setIsMenuOpen((currentState) => !currentState)}
+                                className="flex items-center gap-1 text-white font-normal text-base px-1 py-1 ml-0 rounded focus:outline-none focus:ring-0 focus:border-0 bg-transparent lg:hidden"
+                                aria-label="Browse navigation"
+                            >
+                                Browse
+                                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} strokeWidth={2.2} />
+                            </button>
                             <nav className="hidden lg:flex lg:items-center lg:gap-7 xl:gap-8">
                                 {navLinks.map(renderNavItem)}
                             </nav>
@@ -251,45 +240,49 @@ const Home = () => {
                                 <Search className="h-5 w-5" strokeWidth={2.2} />
                             </button>
                             <img src={profilePhotoRed} alt="Profile" className="h-8 w-8 rounded object-cover" />
-                            <button
-                                type="button"
-                                onClick={() => setIsMenuOpen((currentState) => !currentState)}
-                                className="text-white transition hover:text-[#b3b3b3]"
-                                aria-label="Toggle navigation"
-                            >
-                                {isMenuOpen ? <X className="h-6 w-6" strokeWidth={2.2} /> : <Menu className="h-6 w-6" strokeWidth={2.2} />}
-                            </button>
                         </div>
                     </div>
 
                     {isMenuOpen && (
-                        <div className="mt-4 rounded bg-black/85 p-4 backdrop-blur-md lg:hidden">
-                            <nav className="flex flex-col gap-3">{navLinks.map(renderNavItem)}</nav>
+                        <div className="fixed top-0 left-0 w-1/2 max-w-xs bg-black/70 backdrop-blur-[6px] shadow-2xl z-40 animate-fadeInDown rounded-r-lg border-r border-white/10 lg:hidden" style={{ height: `calc(${navLinks.length} * 3.5rem + 6rem)` }}>
+                            <nav className="flex flex-col gap-6 text-lg font-medium pt-24 items-center justify-center">
+                                {navLinks.map(renderNavItem)}
+                            </nav>
                         </div>
                     )}
                 </header>
 
-                <div className="relative z-10 flex h-full items-center px-4 pb-20 pt-28 sm:px-8 sm:pb-24 sm:pt-32 lg:px-16 lg:pb-28 lg:pt-36">
+                <div className="relative z-10 flex h-full items-center px-4 pb-20 pt-8 sm:px-8 sm:pb-24 sm:pt-12 lg:px-16 lg:pb-28 lg:pt-16">
                     <div className="max-w-xl lg:max-w-2xl">
-                        <h1 className={`${contentBaseClass} mt-4 max-w-3xl text-4xl font-bold leading-[0.95] text-white sm:text-5xl lg:text-6xl xl:text-7xl ${contentVisible ? "translate-y-0 opacity-100" : "translate-y-[15px] opacity-0"}`}>
-                            {currentSlide.title}
-                        </h1>
-                        <p className={`${contentBaseClass} delay-200 mt-5 max-w-2xl text-sm leading-7 text-white/85 sm:text-base sm:leading-8 lg:text-lg ${contentVisible ? "translate-y-0 opacity-100" : "translate-y-[15px] opacity-0"}`}>
+                        <div className="flex flex-row flex-wrap items-end gap-2 mt-4 w-full">
+                            <h1 className={`${contentBaseClass} text-3xl font-bold leading-[0.95] text-white sm:text-4xl lg:text-5xl xl:text-6xl ${contentVisible ? "translate-y-0 opacity-100" : "translate-y-[15px] opacity-0"}`}
+                                style={{ wordBreak: 'break-word' }}>
+                                {(() => {
+                                    switch (activeIndex) {
+                                        case 0: return "Luxury Villa";
+                                        case 1: return "City Penthouse";
+                                        case 2: return "Beach Retreat";
+                                        case 3: return "Green Manor";
+                                        default: return currentSlide.title;
+                                    }
+                                })()}
+                            </h1>
+                            <span className="font-medium text-white/75 text-base ml-2 mb-1" style={{}}>{currentSlide.location}</span>
+                        </div>
+                        <p className={`${contentBaseClass} delay-200 mt-5 max-w-full sm:max-w-xl break-words text-sm sm:text-base font-normal text-white leading-snug ${contentVisible ? "translate-y-0 opacity-100" : "translate-y-[15px] opacity-0"}`}
+                            style={{ fontSize: '1rem', lineHeight: '1.5', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', whiteSpace: 'normal' }}>
                             {currentSlide.description}
-                        </p>
-                        <p className={`${contentBaseClass} delay-300 mt-3 text-sm font-medium text-white/75 sm:text-base ${contentVisible ? "translate-y-0 opacity-100" : "translate-y-[15px] opacity-0"}`}>
-                            {currentSlide.location}
                         </p>
 
                         <div className={`${contentBaseClass} delay-[400ms] mt-7 flex flex-wrap items-center gap-3 sm:mt-8 ${contentVisible ? "translate-y-0 opacity-100" : "translate-y-[15px] opacity-0"}`}>
-                            <button type="button" className="inline-flex h-11 items-center justify-center gap-2 rounded bg-white px-6 text-base font-semibold text-black transition hover:bg-white/85 sm:h-12 sm:px-7 sm:text-lg">
+                            <button type="button" className="inline-flex h-11 items-center justify-center gap-2 rounded bg-white px-6 text-base font-semibold text-black transition hover:bg-white/85 sm:h-12 sm:px-7 sm:text-lg" style={{ paddingTop: '6px', paddingBottom: '6px' }}>
                                 Schedule
                             </button>
                             <button
                                 type="button"
-                                onClick={() => setIsModalOpen(true)}
+                                onClick={() => setSelectedSlide(currentSlide)}
                                 className="inline-flex h-11 items-center justify-center gap-2 rounded bg-white/25 px-6 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/35 sm:h-12 sm:px-7 sm:text-lg"
-                            >
+                                style={{ paddingTop: '6px', paddingBottom: '6px' }}>
                                 <Info className="h-5 w-5" strokeWidth={2.3} />
                                 More Info
                             </button>
@@ -298,54 +291,56 @@ const Home = () => {
                 </div>
             </section>
 
-            {isModalOpen && (
-                <div className="fixed inset-0 z-50 bg-black/70 px-4 py-6 backdrop-blur-[2px] sm:px-8 lg:px-14" onClick={() => setIsModalOpen(false)}>
-                    <div className="relative mx-auto flex h-[92vh] w-full flex-col rounded bg-[#181818] shadow-[0_24px_80px_rgba(0,0,0,0.55)] sm:max-w-4xl lg:w-[60vw] lg:max-w-none" onClick={(event) => event.stopPropagation()}>
-                        <div className="relative h-[18rem] w-full shrink-0 sm:h-[21rem] lg:h-[52%]">
-                            <img src={currentSlide.image} alt={currentSlide.title} className="h-full w-full object-cover object-center" />
+            {selectedSlide && (
+                <div className="fixed inset-0 z-50 overflow-y-auto bg-black/70 px-4 py-6 backdrop-blur-[2px] sm:px-8 lg:px-14" onClick={() => setSelectedSlide(null)}>
+                    <div
+                        className="relative mx-auto my-4 w-full rounded bg-[#181818] shadow-[0_24px_80px_rgba(0,0,0,0.55)] sm:max-w-4xl lg:w-[60vw] lg:max-w-none"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <div className="relative h-[15rem] w-full overflow-hidden rounded-t sm:h-[18rem] lg:h-[20rem]">
+                            <img src={selectedSlide.image} alt={selectedSlide.title} className="h-full w-full object-cover object-center" />
                             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.24)_48%,rgba(24,24,24,1)_100%)]" />
                             <button
                                 type="button"
-                                onClick={() => setIsModalOpen(false)}
-                                className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black sm:right-6 sm:top-6"
+                                onClick={() => setSelectedSlide(null)}
+                                className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/70 text-white transition hover:bg-black sm:right-5 sm:top-5"
                                 aria-label="Close details"
                             >
-                                <X className="h-6 w-6" strokeWidth={2.2} />
+                                <X className="h-5 w-5" strokeWidth={2.2} />
                             </button>
-                            <div className="absolute bottom-0 left-0 w-full px-6 pb-5 sm:px-10 sm:pb-6 lg:px-12 lg:pb-8">
-                                <h2 className="max-w-4xl text-3xl font-semibold leading-none text-white sm:text-4xl lg:text-[2.65rem]">
-                                    {currentSlide.title}
+                            <div className="absolute inset-x-0 bottom-0 px-5 pb-5 sm:px-8 sm:pb-6 lg:px-10">
+                                <h2 className="max-w-3xl text-2xl font-semibold leading-tight text-white sm:text-3xl lg:text-[1.7rem]">
+                                    {selectedSlide.title}
                                 </h2>
-                                <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-5">
-                                    <button type="button" className="inline-flex h-10 items-center justify-center rounded bg-white px-5 text-sm font-semibold text-black transition hover:bg-white/85 sm:h-11 sm:px-6 sm:text-base">
+                                <div className="mt-3 flex items-center gap-2">
+                                    <button type="button" className="inline-flex items-center justify-center rounded bg-white text-[0.85rem] font-semibold text-black transition hover:bg-white/85" style={{ height: '1.7rem', paddingTop: '1px', paddingBottom: '1px', paddingLeft: '10px', paddingRight: '10px', minHeight: 'unset', lineHeight: '1.1' }}>
                                         Schedule
                                     </button>
-                                    <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/45 text-white transition hover:border-white sm:h-11 sm:w-11" aria-label="Info">
-                                        <Info className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.1} />
+                                    <button type="button" className="inline-flex items-center justify-center rounded-full border border-white/45 text-white transition hover:border-white" aria-label="Info" style={{ height: '1.7rem', width: '1.7rem', paddingTop: '1px', paddingBottom: '1px', minHeight: 'unset', lineHeight: '1.1' }}>
+                                        <Info className="h-3 w-3" strokeWidth={1.6} />
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="grid flex-1 gap-6 overflow-hidden px-6 pb-7 pt-4 text-white sm:px-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(15rem,0.8fr)] lg:px-12">
-                            <div className="min-h-0 overflow-hidden">
-                                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm sm:text-base">
-                                    <span className="text-white/70">{currentSlide.status}</span>
-                                    <span className="rounded border border-white/25 px-2 py-0.5 text-xs text-white/85 sm:text-sm">{currentSlide.badge}</span>
-                                    <span className="rounded border border-white/25 px-2 py-0.5 text-xs text-white/85 sm:text-sm">{currentSlide.type}</span>
+                        <div className="grid gap-5 px-5 pb-6 pt-4 text-[0.92rem] text-white/78 sm:px-8 sm:pb-8 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,0.78fr)] lg:px-10 lg:text-sm">
+                            <div className="space-y-4">
+                                <div className="flex flex-wrap items-center gap-2 text-xs text-white/85 sm:text-sm">
+                                    <span className="font-medium text-white">{selectedSlide.status}</span>
+                                    <span className="rounded border border-white/20 px-2 py-0.5">{selectedSlide.badge}</span>
+                                    <span className="rounded border border-white/20 px-2 py-0.5">{selectedSlide.type}</span>
                                 </div>
-                                <p className="mt-4 max-w-3xl text-sm leading-7 text-white/88 sm:text-base sm:leading-8 lg:text-[1rem]">
-                                    {currentSlide.overview}
+                                <p className="max-w-2xl text-sm leading-6 text-white/88 sm:text-[0.95rem] sm:leading-7">
+                                    {selectedSlide.overview}
                                 </p>
                             </div>
 
-                            <div className="space-y-3 text-sm leading-7 text-white/75 sm:text-base sm:leading-8">
-                                <p><span className="text-white/45">Price: </span><span className="text-white">{currentSlide.price}</span></p>
-                                <p><span className="text-white/45">Location: </span><span className="text-white">{currentSlide.location}</span></p>
-                                <p><span className="text-white/45">Layout: </span><span className="text-white">{currentSlide.beds}, {currentSlide.baths}</span></p>
-                                <p><span className="text-white/45">Area: </span><span className="text-white">{currentSlide.area}</span></p>
-                                <p><span className="text-white/45">Highlights: </span><span className="text-white">{currentSlide.highlights}</span></p>
-                                <p><span className="text-white/45">Ideal For: </span><span className="text-white">{currentSlide.idealFor}</span></p>
+                            <div className="space-y-2.5 text-sm leading-6 text-white/78 sm:text-[0.95rem] sm:leading-7">
+                                <p><span className="text-white/45">Price: </span><span className="text-white">{selectedSlide.price}</span></p>
+                                <p><span className="text-white/45">Location: </span><span className="text-white">{selectedSlide.location}</span></p>
+                                <p><span className="text-white/45">Layout: </span><span className="text-white">{selectedSlide.beds}, {selectedSlide.baths}</span></p>
+                                <p><span className="text-white/45">Area: </span><span className="text-white">{selectedSlide.area}</span></p>
+                                <p><span className="text-white/45">Highlights: </span><span className="text-white">{selectedSlide.highlights}</span></p>
                             </div>
                         </div>
                     </div>
