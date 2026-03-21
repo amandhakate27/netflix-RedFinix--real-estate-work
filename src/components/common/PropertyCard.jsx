@@ -4,7 +4,7 @@ const PropertyCard = ({ card, onClick }) => {
   return (
     <article
       onClick={() => onClick(card)}
-      className="group relative w-full cursor-pointer overflow-visible p-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.035] will-change-transform motion-reduce:transform-none"
+      className="group relative w-full cursor-pointer overflow-visible p-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transform-none"
     >
       <div className="relative w-full overflow-hidden rounded-xl" style={{ paddingBottom: "146%" }}>
         <img src={card.image} alt={card.title} className="absolute inset-0 h-full w-full object-cover" />
