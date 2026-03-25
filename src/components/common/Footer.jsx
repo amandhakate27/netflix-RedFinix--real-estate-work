@@ -1,10 +1,10 @@
-import React from 'react';
+
 import { Facebook, Instagram, Twitter, Linkedin, MapPin, Phone, Mail } from 'lucide-react';
 import redFinixLogo from '../../assets/images/redFinixLogo.png';
 
 const Footer = () => {
     return (
-        <footer className="bg-[#141414] pt-16 pb-12 px-4 sm:px-8 lg:px-16 text-[#808080] text-sm mt-10">
+        <footer className="bg-[#141414] pt-16 pb-12 px-4 sm:px-8 lg:px-16 text-[#808080] text-sm">
             <div className="max-w-6xl mx-auto">
                 {/* Social Icons */}
                 <div className="flex gap-6 mb-8 text-white">

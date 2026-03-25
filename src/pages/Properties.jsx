@@ -214,7 +214,7 @@ const getShuffledSlides = () => {
     return shuffled.map(generateMockData);
 };
 
-const Home = () => {
+const Properties = () => {
     const location = useLocation();
     const [activeIndex, setActiveIndex] = useState(1);
     const [contentVisible, setContentVisible] = useState(true);
@@ -235,8 +235,10 @@ const Home = () => {
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const searchRefDesktop = useRef(null);
     const searchRefMobile = useRef(null);
+    const dropdownRef = useRef(null);
     const timeoutRef = useRef(null);
     const intervalRef = useRef(null);
     const [hoveredCard, setHoveredCard] = useState(null);
@@ -257,11 +259,15 @@ const Home = () => {
         const handleClickOutside = (event) => {
             const deskNode = searchRefDesktop.current;
             const mobNode = searchRefMobile.current;
+            const dropNode = dropdownRef.current;
             if (
                 (!deskNode || !deskNode.contains(event.target)) &&
                 (!mobNode || !mobNode.contains(event.target))
             ) {
                 setIsSearchOpen(false);
+            }
+            if (dropNode && !dropNode.contains(event.target)) {
+                setIsDropdownOpen(false);
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
@@ -403,7 +409,7 @@ const Home = () => {
                 </div>
 
                 <header
-                    className={`fixed left-0 right-0 top-0 z-50 w-full transition-all duration-300 sm:px-8 lg:px-16 ${isScrolled ? "bg-[#141414] px-4 py-3 shadow-md" : "bg-transparent px-4 pt-4 sm:pt-5 lg:pt-6"}`}
+                    className={`fixed left-0 right-0 top-0 z-50 w-full transition-all duration-300 sm:px-8 lg:px-16 ${isScrolled ? "bg-[#141414] px-4 pt-4 pb-5 shadow-md lg:pb-6" : "bg-transparent px-4 pt-4 pb-2 sm:pt-5 lg:pt-6"}`}
                 >
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex min-w-0 items-center gap-2 lg:gap-8">
@@ -476,6 +482,31 @@ const Home = () => {
                         </div>
                     </div>
 
+                    <div className="mt-6 flex items-center gap-4 sm:mt-8 md:mt-10 transition-all duration-300">
+                        <h2 className="text-[1.5rem] font-medium text-white sm:text-[2rem] md:text-[2.2rem] lg:text-[2.5rem] leading-none">Properties</h2>
+                        <div className="relative" ref={dropdownRef}>
+                            <button 
+                                type="button"
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className="flex items-center gap-2 lg:gap-3 bg-black text-white text-xs sm:text-[13px] font-medium py-1 px-2 lg:px-2.5 border border-white/60 hover:bg-white/10 transition-colors"
+                            >
+                                All <ChevronDown className="h-3.5 w-3.5" strokeWidth={2} />
+                            </button>
+                            
+                            {isDropdownOpen && (
+                                <div className="absolute left-0 mt-3 w-[260px] bg-black/95 border border-white/20 shadow-2xl z-50 py-4">
+                                    <div className="grid grid-cols-2 gap-y-4 px-3">
+                                        {["Villa", "Penthouse", "Apartment", "House"].map(opt => (
+                                            <a key={opt} href="#" className="text-[13px] text-white/90 hover:text-white hover:underline px-3" onClick={(e) => { e.preventDefault(); setIsDropdownOpen(false); }}>
+                                                {opt}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     {isMenuOpen && (
                         <div className="fixed left-0 top-0 z-40 h-[calc(5*3.5rem+6rem)] w-1/2 max-w-xs rounded-r-lg border-r border-white/10 bg-black/70 shadow-2xl backdrop-blur-[6px] lg:hidden">
                             <nav className="flex flex-col items-center justify-center gap-6 pt-24 text-lg font-medium">
@@ -485,7 +516,7 @@ const Home = () => {
                     )}
                 </header>
 
-                <div className="relative z-10 flex h-full items-center px-4 pb-20 pt-16 sm:px-8 sm:pb-24 sm:pt-20 lg:px-16 lg:pb-28 lg:pt-24">
+                <div className="relative z-10 flex h-full items-center px-4 pb-20 pt-40 sm:px-8 sm:pb-24 sm:pt-48 lg:px-16 lg:pb-28 lg:pt-56">
                     <div className="max-w-xl lg:max-w-2xl">
                         <div className="mt-4 flex w-full flex-row flex-wrap items-end gap-2">
                             <h1
@@ -738,6 +769,6 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Properties;
 
 
