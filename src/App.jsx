@@ -6,6 +6,10 @@ import SignIn from './pages/SignIn.jsx';
 import SignUp from './pages/SignUp.jsx';
 import ShowProperty from './pages/ShowProperty.jsx';
 import ScheduleBooking from './pages/ScheduleBooking.jsx';
+import BookingConfirmation from './pages/BookingConfirmation.jsx';
+import Schedule from './pages/Schedule.jsx';
+import About from './pages/About.jsx';
+import Contact from './pages/Contact.jsx';
 
 const App = () => (
   <BrowserRouter>
@@ -18,9 +22,10 @@ const App = () => (
       <Route path="/properties" element={<Properties />} />
       <Route path="/show-property" element={<ShowProperty />} />
       <Route path="/schedule-booking" element={<ScheduleBooking />} />
-      <Route path="/schedule" element={<Home />} />
-      <Route path="/about" element={<Home />} />
-      <Route path="/contact" element={<Home />} />
+      <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+      <Route path="/schedule" element={<Schedule />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
     </Routes>
   </BrowserRouter>
 );

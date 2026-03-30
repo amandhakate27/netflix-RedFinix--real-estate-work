@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, ChevronLeft, ChevronRight, Info, Menu, Search, X, Heart, Calendar, Plus } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Info, Menu, Search, X, Heart, Calendar, Plus, CircleUserRound } from "lucide-react";
 import HoverPropertyCard from "../components/common/HoverPropertyCard";
 import PreviewSliderRow from "../components/common/PreviewSliderRow";
 import Top10SliderRow from "../components/common/Top10SliderRow";
 import Footer from "../components/common/Footer";
 import redFinixLogo from "../assets/images/redFinixLogo.png";
-import profilePhotoRed from "../assets/images/profilePhotoRed.jpg";
 import { heroSlides, getTop10Slides, getShuffledSlides } from "../data/mockData";
 
 const navLinks = [
@@ -232,7 +231,11 @@ const Properties = () => {
                 </div>
 
                 <header
-                    className={`fixed left-0 right-0 top-0 z-50 w-full transition-all duration-300 sm:px-8 lg:px-16 ${isScrolled ? "bg-[#141414] px-4 pt-4 pb-5 shadow-md lg:pb-6" : "bg-transparent px-4 pt-4 pb-2 sm:pt-5 lg:pt-6"}`}
+                    className={`fixed left-0 right-0 top-0 z-50 w-full px-4 py-4 transition-all duration-300 sm:px-8 lg:px-16 ${
+                        isScrolled
+                            ? "border-b border-white/10 bg-black/70 backdrop-blur-md"
+                            : "bg-[linear-gradient(180deg,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.45)_72%,rgba(0,0,0,0)_100%)]"
+                    }`}
                 >
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex min-w-0 items-center gap-2 lg:gap-8">
@@ -274,7 +277,7 @@ const Properties = () => {
                                 />
                             </div>
                             <div className="flex items-center gap-2">
-                                <img src={profilePhotoRed} alt="Profile" className="h-8 w-8 rounded object-cover" />
+                                <CircleUserRound className="h-8 w-8 text-white/80 transition-colors hover:text-white" strokeWidth={1.5} />
                                 <ChevronDown className="h-4 w-4 text-white" strokeWidth={2.2} />
                             </div>
                         </div>
@@ -301,7 +304,7 @@ const Properties = () => {
                                         }`}
                                 />
                             </div>
-                            <img src={profilePhotoRed} alt="Profile" className="h-8 w-8 rounded object-cover" />
+                                <CircleUserRound className="h-8 w-8 text-white/80 transition-colors hover:text-white" strokeWidth={1.5} />
                         </div>
                     </div>
 
@@ -331,11 +334,31 @@ const Properties = () => {
                     </div>
 
                     {isMenuOpen && (
-                        <div className="fixed left-0 top-0 z-40 h-[calc(5*3.5rem+6rem)] w-1/2 max-w-xs rounded-r-lg border-r border-white/10 bg-black/70 shadow-2xl backdrop-blur-[6px] lg:hidden">
-                            <nav className="flex flex-col items-center justify-center gap-6 pt-24 text-lg font-medium">
-                                {navLinks.map(renderNavItem)}
-                            </nav>
-                        </div>
+                        <>
+                            <div className="fixed inset-0 z-30 lg:hidden" onClick={() => setIsMenuOpen(false)} />
+                            <div className="absolute sm:left-4 left-0 top-[60px] z-40 mt-1 w-[260px] rounded border border-white/20 bg-black/95 py-2 shadow-2xl backdrop-blur-md lg:hidden">
+                                <div className="absolute sm:left-[110px] left-[135px] -top-[12px] h-0 w-0 border-b-[12px] border-l-[12px] border-r-[12px] border-b-black/95 border-l-transparent border-r-transparent"></div>
+                                <div className="absolute sm:left-[109px] left-[134px] -top-[14px] -z-10 h-0 w-0 border-b-[14px] border-l-[13px] border-r-[13px] border-b-white/20 border-l-transparent border-r-transparent"></div>
+                                
+                                <nav className="flex flex-col divide-y divide-white/10 text-center">
+                                    {navLinks.map(link => {
+                                        if (link.to) {
+                                            const isActive = location.pathname === link.to;
+                                            return (
+                                                <NavLink key={link.label} to={link.to} onClick={() => setIsMenuOpen(false)} className={`py-4 text-[15px] font-medium transition-colors hover:bg-white/5 ${isActive ? "text-white" : "text-white/70"}`}>
+                                                    {link.label}
+                                                </NavLink>
+                                            )
+                                        }
+                                        return (
+                                            <a key={link.label} href={link.href} onClick={() => setIsMenuOpen(false)} className="py-4 text-[15px] font-medium text-white/70 transition-colors hover:bg-white/5 hover:text-white">
+                                                {link.label}
+                                            </a>
+                                        )
+                                    })}
+                                </nav>
+                            </div>
+                        </>
                     )}
                 </header>
 

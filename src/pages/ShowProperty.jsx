@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, Search, X } from "lucide-react";
+import { ChevronDown, Search, X, ArrowLeft, Heart, Share2, MapPin, Maximize2, CircleUserRound } from "lucide-react";
 import Footer from "../components/common/Footer";
 import { heroSlides } from "../data/mockData";
 import redFinixLogo from "../assets/images/redFinixLogo.png";
-import profilePhotoBlue from "../assets/images/profilePhotoBlue.jpg";
 import propertyDetail0 from "../assets/images/property-detail-0.png";
 import propertyDetail1 from "../assets/images/property-detail-1.jpg";
 import propertyDetail2 from "../assets/images/property-detail-2.jpg";
@@ -160,28 +159,37 @@ const ShowProperty = () => {
               <Search className="h-5 w-5" strokeWidth={2.2} />
             </button>
             <div className="flex items-center gap-2">
-              <img src={profilePhotoBlue} alt="Profile" className="h-8 w-8 rounded object-cover" />
+              <CircleUserRound className="h-8 w-8 text-white/80 transition-colors hover:text-white" strokeWidth={1.5} />
               <ChevronDown className="h-4 w-4 text-white" strokeWidth={2.2} />
             </div>
           </div>
         </div>
 
-        {isMenuOpen && (
-          <div className="fixed left-0 top-0 z-40 h-[calc(5*3.5rem+6rem)] w-1/2 max-w-xs rounded-r-lg border-r border-white/10 bg-black/70 shadow-2xl backdrop-blur-[6px] lg:hidden">
-            <nav className="flex flex-col items-center justify-center gap-6 pt-24 text-lg font-medium">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.label}
-                  to={link.to}
-                  className={({ isActive }) => `transition-colors duration-200 hover:text-[#b3b3b3] ${isActive ? "font-semibold text-white" : "text-white/85"}`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-            </nav>
-          </div>
-        )}
+          {isMenuOpen && (
+            <>
+              <div className="fixed inset-0 z-30 lg:hidden" onClick={() => setIsMenuOpen(false)} />
+              <div className="absolute sm:left-4 left-0 top-[100%] z-40 mt-1 w-[260px] rounded border border-[#141414]/10 bg-white/95 py-2 shadow-2xl backdrop-blur-md lg:hidden">
+                <div className="absolute sm:left-[110px] left-[135px] -top-[12px] h-0 w-0 border-b-[12px] border-l-[12px] border-r-[12px] border-b-white/95 border-l-transparent border-r-transparent"></div>
+                <div className="absolute sm:left-[109px] left-[134px] -top-[14px] -z-10 h-0 w-0 border-b-[14px] border-l-[13px] border-r-[13px] border-b-[#141414]/20 border-l-transparent border-r-transparent"></div>
+                
+                <nav className="flex flex-col divide-y divide-[#141414]/10 text-center">
+                  {navLinks.map((link) => {
+                    const isActive = location.pathname === link.to;
+                    return (
+                      <NavLink
+                        key={link.label}
+                        to={link.to}
+                        onClick={() => setIsMenuOpen(false)}
+                        className={`py-4 text-[15px] font-medium transition-colors hover:bg-[#141414]/5 ${isActive ? "text-[#141414]" : "text-[#141414]/70"}`}
+                      >
+                        {link.label}
+                      </NavLink>
+                    );
+                  })}
+                </nav>
+              </div>
+            </>
+          )}
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
