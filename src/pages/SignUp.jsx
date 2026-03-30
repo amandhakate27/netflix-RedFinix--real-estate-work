@@ -34,7 +34,9 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (firstName.trim() && lastName.trim() && email.trim() && password.trim() && agreed) {
-      navigate("/home");
+      // Save user info to localStorage for pre-filling other pages
+      localStorage.setItem("redfinix_user", JSON.stringify({ firstName, lastName, email }));
+      navigate("/signin");
     }
   };
 

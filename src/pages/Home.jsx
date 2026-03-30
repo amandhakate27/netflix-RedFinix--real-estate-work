@@ -89,6 +89,12 @@ const Home = () => {
         navigate("/show-property", { state: { property, from: location.pathname } });
     };
 
+    const openScheduleBooking = (property) => {
+        if (!property) return;
+        setSelectedSlide(null);
+        navigate("/schedule-booking", { state: { property, from: location.pathname } });
+    };
+
     const handleCardMouseEnter = (slideObj, event) => {
         const target = event.currentTarget;
         if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
@@ -337,7 +343,7 @@ const Home = () => {
                         </p>
 
                         <div className={`${contentBaseClass} delay-[400ms] mt-7 flex flex-wrap items-center gap-3 sm:mt-8 ${contentVisible ? "translate-y-0 opacity-100" : "translate-y-[15px] opacity-0"}`}>
-                            <button type="button" className="inline-flex h-11 items-center justify-center gap-2 rounded bg-white px-6 text-base font-semibold text-black transition hover:bg-white/85 sm:h-12 sm:px-7 sm:text-lg" style={{ paddingTop: "6px", paddingBottom: "6px" }}>
+                            <button type="button" onClick={() => openScheduleBooking(currentSlide)} className="inline-flex h-11 items-center justify-center gap-2 rounded bg-white px-6 text-base font-semibold text-black transition hover:bg-white/85 sm:h-12 sm:px-7 sm:text-lg" style={{ paddingTop: "6px", paddingBottom: "6px" }}>
                                 Schedule
                             </button>
                             <button
@@ -466,7 +472,7 @@ const Home = () => {
                                         <span className="absolute -top-9 z-10 whitespace-nowrap rounded bg-white px-2.5 py-1 text-[11px] font-bold text-black opacity-0 transition-opacity peer-hover:opacity-100 pointer-events-none shadow-md">Favourite</span>
                                     </div>
                                     <div className="relative flex flex-col items-center">
-                                        <button type="button" className="peer inline-flex items-center justify-center rounded-full border border-white/45 text-white transition hover:border-white" aria-label="Schedule" style={{ height: "1.7rem", width: "1.7rem", paddingTop: "1px", paddingBottom: "1px", minHeight: "unset", lineHeight: "1.1" }}>
+                                        <button type="button" onClick={() => openScheduleBooking(selectedSlide)} className="peer inline-flex items-center justify-center rounded-full border border-white/45 text-white transition hover:border-white" aria-label="Schedule" style={{ height: "1.7rem", width: "1.7rem", paddingTop: "1px", paddingBottom: "1px", minHeight: "unset", lineHeight: "1.1" }}>
                                             <Calendar className="h-3 w-3" strokeWidth={1.6} />
                                         </button>
                                         <span className="absolute -top-9 z-10 whitespace-nowrap rounded bg-white px-2.5 py-1 text-[11px] font-bold text-black opacity-0 transition-opacity peer-hover:opacity-100 pointer-events-none shadow-md">Schedule</span>
@@ -548,6 +554,7 @@ const Home = () => {
                         setHoveredCard(null);
                         setSelectedSlide(slide);
                     }}
+                    onSchedule={(slide) => openScheduleBooking(slide)}
                 />
             )}
             <Footer />

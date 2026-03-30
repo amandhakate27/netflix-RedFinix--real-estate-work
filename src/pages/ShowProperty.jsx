@@ -11,9 +11,6 @@ import propertyDetail2 from "../assets/images/property-detail-2.jpg";
 import propertyDetail3 from "../assets/images/property-detail-3.jpg";
 import propertyDetail4 from "../assets/images/property-detail-4.jpg";
 import backIcon from "../assets/Icons/detail-back.svg";
-import userIcon from "../assets/Icons/detail-user.svg";
-import phoneIcon from "../assets/Icons/detail-phone.svg";
-import emailIcon from "../assets/Icons/detail-email.svg";
 import locationIcon from "../assets/Icons/detail-location.svg";
 import bedIcon from "../assets/Icons/detail-bed.svg";
 import bathIcon from "../assets/Icons/detail-bath.svg";
@@ -69,7 +66,7 @@ const locationAdvantages = [
 
 const detailImages = [propertyDetail0, propertyDetail1, propertyDetail2, propertyDetail3, propertyDetail4];
 
-const normalizePrice = (price) => String(price || "? 4.50 Cr").replace(/₹/g, "?");
+const normalizePrice = (price) => String(price || "?4.50 Cr").replace(/₹/g, "?");
 
 const ShowProperty = () => {
   const location = useLocation();
@@ -77,6 +74,7 @@ const ShowProperty = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const selectedProperty = useMemo(() => {
     const fallback = heroSlides[0];
@@ -98,10 +96,7 @@ const ShowProperty = () => {
     };
   }, [location.state]);
 
-  const galleryImages = useMemo(
-    () => [selectedProperty.image, ...detailImages],
-    [selectedProperty.image],
-  );
+  const galleryImages = useMemo(() => [selectedProperty.image, ...detailImages], [selectedProperty.image]);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -118,11 +113,24 @@ const ShowProperty = () => {
     };
   }, [isLightboxOpen]);
 
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 24);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const backPath = location.state?.from || "/properties";
 
   return (
     <div className="min-h-screen bg-[#141414] text-white">
-      <header className="sticky top-0 z-40 bg-[linear-gradient(180deg,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.45)_72%,rgba(0,0,0,0)_100%)] px-4 py-4 sm:px-8 lg:px-16">
+      <header
+        className={`sticky top-0 z-40 px-4 py-4 transition-all duration-300 sm:px-8 lg:px-16 ${
+          isScrolled
+            ? "border-b border-white/10 bg-black/70 backdrop-blur-md"
+            : "bg-[linear-gradient(180deg,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.45)_72%,rgba(0,0,0,0)_100%)]"
+        }`}
+      >
         <div className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3 lg:gap-8">
             <img src={redFinixLogo} alt="Redfinix" className="w-28 sm:w-32 lg:w-36" />
@@ -182,54 +190,55 @@ const ShowProperty = () => {
           onClick={() => navigate(backPath)}
           className="mb-6 inline-flex items-center gap-3 text-sm font-semibold text-white/85 transition hover:text-[#E50914] sm:text-base"
         >
-          <img src={backIcon} alt="" className="h-5 w-5" />
+          <img src={backIcon} alt="" className="h-5 w-5 brightness-0 invert" />
           <span>Back to Properties</span>
         </button>
 
-        <section className="grid gap-5 lg:grid-cols-[2fr_1.1fr]">
-          <article className="relative h-64 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#1b1b1b] shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:h-80 lg:h-[336px]">
-            <button type="button" onClick={() => setIsLightboxOpen(true)} className="relative h-full w-full cursor-pointer">
-              <div className="absolute left-0 right-0 top-4 z-20 flex gap-1.5 px-4 sm:px-6">
+        <section className="space-y-5">
+          <div className="mx-auto max-w-4xl">
+            <article className="relative h-64 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#1b1b1b] shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:h-[22rem] lg:h-[26rem] xl:h-[30rem]">
+              <button type="button" onClick={() => setIsLightboxOpen(true)} className="relative h-full w-full cursor-pointer">
+                <div className="absolute left-0 right-0 top-4 z-20 flex gap-1.5 px-4 sm:px-6">
+                  {galleryImages.map((image, index) => (
+                    <button
+                      key={image}
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setCurrentImageIndex(index);
+                      }}
+                      className={`h-1 flex-1 rounded-full transition-all duration-300 ${index === currentImageIndex ? "bg-white" : "bg-white/35"}`}
+                      aria-label={`Go to gallery image ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
                 {galleryImages.map((image, index) => (
-                  <button
+                  <img
                     key={image}
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      setCurrentImageIndex(index);
-                    }}
-                    className={`h-1 flex-1 rounded-full transition-all duration-300 ${index === currentImageIndex ? "bg-white" : "bg-white/35"}`}
-                    aria-label={`Go to gallery image ${index + 1}`}
+                    src={image}
+                    alt={`${selectedProperty.title} ${index + 1}`}
+                    className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${index === currentImageIndex ? "opacity-100" : "opacity-0"}`}
                   />
                 ))}
-              </div>
+                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/35" />
+              </button>
+            </article>
 
-              {galleryImages.map((image, index) => (
-                <img
-                  key={image}
-                  src={image}
-                  alt={`${selectedProperty.title} ${index + 1}`}
-                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${index === currentImageIndex ? "opacity-100" : "opacity-0"}`}
-                />
-              ))}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/20" />
-            </button>
-          </article>
-
-          <aside className="rounded-2xl border border-white/10 bg-[#1b1b1b] p-6 shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:p-7">
-            <h2 className="text-xl font-semibold text-white sm:text-2xl">Contact Executive</h2>
-            <div className="mt-7 flex items-center gap-3">
-              <img src={userIcon} alt="" className="h-8 w-8 shrink-0" />
-              <p className="text-lg font-semibold text-white">Sarash Johnson</p>
+            <div className="mt-5 flex justify-center">
+              <button
+                type="button"
+                onClick={() =>
+                  navigate("/schedule-booking", {
+                    state: { property: selectedProperty, from: "/show-property" },
+                  })
+                }
+                className="inline-flex h-10 items-center justify-center rounded bg-[#E50914] px-5 text-sm font-medium text-white transition hover:bg-[#c11119] sm:h-11 sm:px-6 sm:text-base"
+              >
+                Schedule
+              </button>
             </div>
-            <ul className="mt-5 space-y-3 text-sm text-white/65 sm:text-base">
-              <li className="flex items-center gap-3"><img src={phoneIcon} alt="" className="h-4 w-4 shrink-0" /><span>+91 9876365357</span></li>
-              <li className="flex items-center gap-3"><img src={emailIcon} alt="" className="h-4 w-4 shrink-0" /><span>sarashjohnson@redfinix.com</span></li>
-            </ul>
-            <button type="button" className="mt-10 inline-flex h-11 w-full items-center justify-center rounded bg-[#E50914] px-6 text-sm font-medium text-white transition hover:bg-[#c11119] sm:text-base">
-              Schedule Viewing
-            </button>
-          </aside>
+          </div>
         </section>
 
         <section className="mt-5 overflow-hidden rounded-2xl border border-white/10 bg-[#1b1b1b] shadow-[0_18px_40px_rgba(0,0,0,0.3)]">
@@ -237,7 +246,7 @@ const ShowProperty = () => {
             <div className="flex flex-col items-center justify-center lg:items-start">
               <h1 className="text-center text-2xl font-bold text-[#E50914] sm:text-3xl lg:text-left">{selectedProperty.title}</h1>
               <p className="mt-2 inline-flex items-center gap-2 text-base text-white/75 sm:text-lg">
-                <img src={locationIcon} alt="" className="h-4.5 w-4.5" />
+                <img src={locationIcon} alt="" className="h-4.5 w-4.5 brightness-0 invert" />
                 <span>{selectedProperty.location}</span>
               </p>
             </div>
@@ -251,17 +260,17 @@ const ShowProperty = () => {
           <div className="grid grid-cols-1 divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             <div className="flex flex-col items-center p-4 text-center sm:p-5">
               <img src={bedIcon} alt="" className="h-4.5 w-4.5" />
-              <p className="mt-2 text-xl font-bold text-white">{String(selectedProperty.beds).replace(' Beds', '')}</p>
+              <p className="mt-2 text-xl font-bold text-white">{String(selectedProperty.beds).replace(" Beds", "")}</p>
               <p className="text-sm text-white/55 sm:text-base">Bedrooms</p>
             </div>
             <div className="flex flex-col items-center p-4 text-center sm:p-5">
               <img src={bathIcon} alt="" className="h-4.5 w-4.5" />
-              <p className="mt-2 text-xl font-bold text-white">{String(selectedProperty.baths).replace(' Baths', '')}</p>
+              <p className="mt-2 text-xl font-bold text-white">{String(selectedProperty.baths).replace(" Baths", "")}</p>
               <p className="text-sm text-white/55 sm:text-base">Bathrooms</p>
             </div>
             <div className="flex flex-col items-center p-4 text-center sm:p-5">
               <img src={areaIcon} alt="" className="h-4.5 w-4.5" />
-              <p className="mt-2 text-xl font-bold text-white">{String(selectedProperty.area).replace(' sq.ft', '')}</p>
+              <p className="mt-2 text-xl font-bold text-white">{String(selectedProperty.area).replace(" sq.ft", "")}</p>
               <p className="text-sm text-white/55 sm:text-base">Square Feet</p>
             </div>
           </div>
@@ -302,25 +311,34 @@ const ShowProperty = () => {
       </main>
 
       {isLightboxOpen && (
-        <div className="fixed inset-0 z-[60] flex h-screen w-screen items-center justify-center bg-black/95 p-5 backdrop-blur-sm sm:p-10" onClick={() => setIsLightboxOpen(false)}>
-          <button type="button" onClick={() => setIsLightboxOpen(false)} className="absolute right-6 top-6 z-[70] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20">
+        <div
+          className="fixed inset-0 z-[60] overflow-y-auto bg-black/95 p-5 backdrop-blur-sm sm:p-10"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          <button
+            type="button"
+            onClick={() => setIsLightboxOpen(false)}
+            className="absolute right-6 top-6 z-[70] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          >
             <X className="h-8 w-8" />
           </button>
-          <div className="relative flex max-h-[90vh] max-w-full flex-col items-center gap-6" onClick={(event) => event.stopPropagation()}>
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
-              <img src={galleryImages[currentImageIndex]} alt="Property visual full screen" className="max-h-[70vh] w-auto max-w-full object-contain" />
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-2 px-4 pb-2 sm:gap-3">
-              {galleryImages.map((image, index) => (
-                <button
-                  key={image}
-                  type="button"
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`h-12 w-16 overflow-hidden rounded-lg border-2 ring-1 ring-white/10 transition-all hover:scale-105 sm:h-14 sm:w-20 ${index === currentImageIndex ? "border-white scale-105" : "border-transparent"}`}
-                >
-                  <img src={image} alt={`Property thumb ${index + 1}`} className="h-full w-full object-cover" />
-                </button>
-              ))}
+          <div className="relative mx-auto flex min-h-[calc(100vh-2.5rem)] max-w-full items-center justify-center" onClick={(event) => event.stopPropagation()}>
+            <div className="relative flex max-w-full flex-col items-center gap-6">
+              <div className="relative overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
+                <img src={galleryImages[currentImageIndex]} alt="Property visual full screen" className="max-h-[70vh] w-auto max-w-full object-contain" />
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-2 px-4 pb-2 sm:gap-3">
+                {galleryImages.map((image, index) => (
+                  <button
+                    key={image}
+                    type="button"
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`h-12 w-16 overflow-hidden rounded-lg border-2 ring-1 ring-white/10 transition-all hover:scale-105 sm:h-14 sm:w-20 ${index === currentImageIndex ? "scale-105 border-white" : "border-transparent"}`}
+                  >
+                    <img src={image} alt={`Property thumb ${index + 1}`} className="h-full w-full object-cover" />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -332,3 +350,4 @@ const ShowProperty = () => {
 };
 
 export default ShowProperty;
+

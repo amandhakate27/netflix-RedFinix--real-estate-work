@@ -5,6 +5,7 @@ import Properties from './pages/Properties.jsx';
 import SignIn from './pages/SignIn.jsx';
 import SignUp from './pages/SignUp.jsx';
 import ShowProperty from './pages/ShowProperty.jsx';
+import ScheduleBooking from './pages/ScheduleBooking.jsx';
 
 const App = () => (
   <BrowserRouter>
@@ -16,6 +17,7 @@ const App = () => (
       <Route path="/home" element={<Home />} />
       <Route path="/properties" element={<Properties />} />
       <Route path="/show-property" element={<ShowProperty />} />
+      <Route path="/schedule-booking" element={<ScheduleBooking />} />
       <Route path="/schedule" element={<Home />} />
       <Route path="/about" element={<Home />} />
       <Route path="/contact" element={<Home />} />

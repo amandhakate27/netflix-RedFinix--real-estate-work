@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Calendar, Plus, ThumbsUp, ChevronDown } from "lucide-react";
 import PropTypes from "prop-types";
 
-const HoverPropertyCard = ({ slide, rect, onClose, onClick }) => {
+const HoverPropertyCard = ({ slide, rect, onClose, onClick, onSchedule }) => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const cardRef = useRef(null);
@@ -68,7 +68,7 @@ const HoverPropertyCard = ({ slide, rect, onClose, onClick }) => {
                     <div className="mt-3 flex items-center justify-between">
                         <div className="flex items-center gap-1.5 sm:gap-2">
                             <button className="flex h-6 sm:h-7 items-center justify-center gap-1 rounded bg-white pl-2 pr-2.5 text-[0.6rem] sm:text-[0.65rem] font-bold text-black transition hover:bg-white/80"
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={(e) => { e.stopPropagation(); handleClose(); onSchedule && onSchedule(slide); }}
                             >
                                 <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5" strokeWidth={2.5} />
                                 Schedule
@@ -131,6 +131,7 @@ HoverPropertyCard.propTypes = {
     rect: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
+    onSchedule: PropTypes.func,
 };
 
 export default HoverPropertyCard;
