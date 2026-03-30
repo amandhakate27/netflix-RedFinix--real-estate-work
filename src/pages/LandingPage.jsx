@@ -1,4 +1,5 @@
-﻿import { useRef } from "react";
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import landingPageImage from "../assets/images/landingPage.png";
 import redFinixLogo from "../assets/images/redFinixLogo.png";
@@ -36,6 +37,7 @@ const trendingCards = [
 const LandingPage = () => {
     const desktopEmailRef = useRef(null);
     const mobileEmailRef = useRef(null);
+    const navigate = useNavigate();
 
     const focusIfEmpty = (inputRef) => {
         if (!inputRef.current) return;
@@ -56,7 +58,7 @@ const LandingPage = () => {
 
                 <div className="absolute inset-0 z-10 flex flex-col">
                     <div className="flex items-center justify-between px-4 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 lg:px-16 lg:py-6">
-                        <img src={redFinixLogo} alt="redfinix-logo" className="w-28 sm:w-28 md:w-36 lg:w-44" /><button className="rounded bg-[#E50914] px-4 py-1.5 text-sm font-medium text-white sm:px-4 sm:py-1.5 sm:text-sm md:px-5 md:py-2">                            Sign In                        </button>
+                        <img src={redFinixLogo} alt="redfinix-logo" className="w-28 sm:w-28 md:w-36 lg:w-44" /><button onClick={() => navigate("/signin")} className="rounded bg-[#E50914] px-4 py-1.5 text-sm font-medium text-white sm:px-4 sm:py-1.5 sm:text-sm md:px-5 md:py-2">                            Sign In                        </button>
                     </div>
 
                     <div className="flex flex-1 flex-col items-center justify-center px-4 text-center sm:justify-center sm:px-8 sm:pt-0 md:px-10">
@@ -81,7 +83,13 @@ const LandingPage = () => {
                                 </div>
                                 <button
                                     type="button"
-                                    onClick={() => focusIfEmpty(desktopEmailRef)}
+                                    onClick={() => {
+                                        focusIfEmpty(desktopEmailRef);
+                                        if (desktopEmailRef.current?.value.trim()) {
+                                            localStorage.setItem("redfinix_signin_email", desktopEmailRef.current.value);
+                                            navigate("/signin");
+                                        }
+                                    }}
                                     className="flex items-center justify-center gap-2 rounded bg-[#E50914] px-7 text-lg font-semibold text-white transition hover:bg-[#c11119] md:px-8 md:text-xl"
                                 >
                                     Get Started
@@ -95,7 +103,13 @@ const LandingPage = () => {
                                 </div>
                                 <button
                                     type="button"
-                                    onClick={() => focusIfEmpty(mobileEmailRef)}
+                                    onClick={() => {
+                                        focusIfEmpty(mobileEmailRef);
+                                        if (mobileEmailRef.current?.value.trim()) {
+                                            localStorage.setItem("redfinix_signin_email", mobileEmailRef.current.value);
+                                            navigate("/signin");
+                                        }
+                                    }}
                                     className="flex w-1/2 items-center justify-center gap-2 rounded bg-[#E50914] py-3 text-base font-semibold text-white transition hover:bg-[#c11119]"
                                 >
                                     Get Started
