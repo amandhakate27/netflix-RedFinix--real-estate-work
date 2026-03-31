@@ -323,7 +323,7 @@ const BookingConfirmation = () => {
           </button>
           <button
             type="button"
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/contact")}
             className="inline-flex h-11 items-center justify-center rounded-lg border border-white/15 text-sm font-medium text-white/70 transition hover:border-white/35 hover:text-white"
           >
             Contact Support

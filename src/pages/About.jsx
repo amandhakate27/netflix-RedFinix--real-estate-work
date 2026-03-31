@@ -194,20 +194,20 @@ const About = () => {
               <ul className="mt-5 space-y-4 text-base text-white/70">
                 <li className="flex items-start gap-4">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E50914]" />
-                  <span>High quality listing visuals with useful metadata.</span>
+                  <span>Curated, high-resolution visuals and verified details for every luxury estate.</span>
                 </li>
                 <li className="flex items-start gap-4">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E50914]" />
-                  <span>Clear route flow from homepage to appointment confirmation.</span>
+                  <span>A seamless, end-to-end booking experience from discovery to private viewing.</span>
                 </li>
                 <li className="flex items-start gap-4">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E50914]" />
-                  <span>Device-first responsive layout with clean spacing and typography.</span>
+                  <span>A premium, distraction-free browsing interface tailored for modern property seekers.</span>
                 </li>
               </ul>
               <button
                 type="button"
-                onClick={() => navigate("/home")}
+                onClick={() => navigate("/schedule")}
                 className="mt-8 inline-flex h-11 items-center justify-center rounded-lg bg-[#E50914] px-8 text-sm font-semibold text-white transition hover:bg-[#c11119]"
               >
                 Schedule a Visit
