@@ -165,8 +165,8 @@ const BookingConfirmation = () => {
         <section className="flex flex-col items-center gap-3 text-center">
           <div className="relative flex items-center justify-center">
             {/* Glow ring */}
-            <span className="absolute h-24 w-24 rounded-full bg-green-500/20 blur-xl" />
-            <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-green-500/10 ring-2 ring-green-500/30">
+            <span className="absolute h-24 w-24 rounded-full bg-white/10 blur-xl" />
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white/5 ring-2 ring-white/20">
               <img src={successIcon} alt="Success" className="h-10 w-10 drop-shadow-md" />
             </div>
           </div>
@@ -236,28 +236,9 @@ const BookingConfirmation = () => {
             </div>
           </div>
 
-          {/* Agent Info */}
+          {/* Action Buttons */}
           <div className="px-5 py-6 sm:px-7">
-            <div className="flex items-start gap-4">
-              <img src={agentIcon} alt="" className="mt-0.5 h-5 w-5 shrink-0 brightness-0 invert opacity-50" />
-              <div className="flex-1">
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#E50914]/80">Your Agent</p>
-                <p className="mt-1 text-base font-semibold text-white sm:text-lg">Sarash Johnson</p>
-                <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/55">
-                  <span className="inline-flex items-center gap-2">
-                    <img src={phoneIcon} alt="" className="h-4 w-4 brightness-0 invert opacity-50" />
-                    +91 9876365357
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <img src={emailIcon} alt="" className="h-4 w-4 brightness-0 invert opacity-50" />
-                    sarash@redfinix.com
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               <button
                 type="button"
                 className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/15 text-sm font-medium text-white/75 transition hover:border-white/35 hover:text-white"
