@@ -10,9 +10,11 @@ import BookingConfirmation from './pages/BookingConfirmation.jsx';
 import Schedule from './pages/Schedule.jsx';
 import About from './pages/About.jsx';
 import Contact from './pages/Contact.jsx';
+import ScrollToTop from './components/common/ScrollToTop.jsx';
 
 const App = () => (
   <BrowserRouter>
+    <ScrollToTop />
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/landing" element={<LandingPage />} />
