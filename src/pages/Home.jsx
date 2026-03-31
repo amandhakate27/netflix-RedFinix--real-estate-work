@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { ChevronRight, Play, Info, Search, ChevronDown, CheckCircle, Clock, Check, X, CircleUserRound } from "lucide-react";
+import { ChevronRight, Play, Info, Search, ChevronDown, CheckCircle, Clock, Check, X, CircleUserRound, Heart, Calendar, Plus } from "lucide-react";
 import HoverPropertyCard from "../components/common/HoverPropertyCard";
 import PreviewSliderRow from "../components/common/PreviewSliderRow";
 import Top10SliderRow from "../components/common/Top10SliderRow";
