@@ -69,11 +69,11 @@ const LandingPage = () => {
                         </h1>
 
                         <p className="mt-3 text-sm font-medium text-white sm:mt-4 sm:text-base md:text-lg">
-                            Starts at Rs 149. Cancel at any time.
+                            Discover premium properties.
                         </p>
 
                         <p className="mt-3 max-w-xs text-xs text-white sm:mt-4 sm:max-w-md sm:text-sm md:max-w-xl md:text-base">
-                            Ready to explore? Enter your email to create or restart your membership.
+                            Ready to explore? Enter your email to begin your real estate journey.
                         </p>
 
                         <div className="mt-4 w-full max-w-xs sm:mt-5 sm:max-w-xl md:max-w-2xl">
