@@ -26,6 +26,7 @@ const FloatingInput = ({ id, label, type = "text", value, onChange, required }) 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [agreed, setAgreed] = useState(false);
@@ -33,9 +34,9 @@ const SignUp = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (firstName.trim() && lastName.trim() && email.trim() && password.trim() && agreed) {
+    if (firstName.trim() && lastName.trim() && mobile.trim() && email.trim() && password.trim() && agreed) {
       // Save user info to localStorage for pre-filling other pages
-      localStorage.setItem("redfinix_user", JSON.stringify({ firstName, lastName, email }));
+      localStorage.setItem("redfinix_user", JSON.stringify({ firstName, lastName, mobile, email }));
       navigate("/signin");
     }
   };
@@ -99,6 +100,14 @@ const SignUp = () => {
                 label="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
+                required
+              />
+              <FloatingInput
+                id="mobile"
+                label="Mobile Number"
+                type="tel"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
                 required
               />
               <FloatingInput
